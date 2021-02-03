@@ -13,14 +13,14 @@ const FeedbackBox = props => {
          if(f.includes("RM")) {
             return (
                <>
-                  <div>{`${f}`}</div>
+                  &nbsp;&nbsp;<div>{`${f}`}</div>
                   <br />
                </>
             );
          }
          return (
             <>
-               <li>{`${str} ${f}`}</li>
+               <li>{`${f}`}</li>
                <br />
             </>
          );

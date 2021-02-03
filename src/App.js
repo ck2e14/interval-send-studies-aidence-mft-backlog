@@ -4,7 +4,6 @@ import FEEDBACK_BOX from "./Components/FeedbackBox/FeedbackBox";
 import { ExportToCsv } from "export-to-csv";
 import "./App.css";
 
-// TODO: Put success & error sends into feedback log
 // TODO: Make status report button and functionality, to produce CSV checking on the send status (study/get) of the sent batch
 
 function App() {
@@ -27,25 +26,23 @@ function App() {
    const [batch, setBatch] = useState(
       "RM296659376 RM296921275 RM295208916 RM295204737 RM297062587 RM297813397 RM297922396 RM296645480"
    );
-   const [studyObjects, setStudyObjects] = useState();
+   const [studyObjects, setStudyObjects] = useState([]);
    const [destinationName, setDestinationName] = useState("0fb2c754-a6a1-43ba-8426-0244eb540cd3");
    const [destinationID, setDestinationID] = useState("");
    const [intervalValue, setIntervalValue] = useState("");
    const [errorSends, setErrorSends] = useState([]);
-   const [okSends, setOkSends] = useState([])
-
+   const [okSends, setOkSends] = useState([]);
+   const [statusLog, setStatusLog] = useState([]);
    const CORS_PROXY_URL = `https://sleepy-fjord-70300.herokuapp.com/`;
-
    const API_BASE_URL = `https://cloud.cimar.co.uk/api/v3/`;
-
-   const STUDY_LIST_ENDPOINT = `study/list?sid=${sessionID}&filter.phi_namespace.equals=d1776f8b-bb20-407a-b08b-1a5b7d3278b1&page.rows=999999
-   `;
-
-   // const 
-
-   const DESTINATION_ADD_ENDPOINT = `destination/add?sid=${sessionID}&account_id=72ad8de3-a873-45ef-a107-d43c3f050369&node_id=1dc76b73-3810-4ffe-9c3e-b144b1fcf9a3&name=${destinationName}
+   const STUDY_LIST = `study/list?sid=${sessionID}&filter.phi_namespace.equals=d1776f8b-bb20-407a-b08b-1a5b7d3278b1&page.rows=999999`;
+   const STUDY_GET = `study/get?sid=${sessionID}&uuid=`;
+   const DESTINATION_ADD = `destination/add?sid=${sessionID}&account_id=72ad8de3-a873-45ef-a107-d43c3f050369&node_id=1dc76b73-3810-4ffe-9c3e-b144b1fcf9a3&name=${destinationName}
    `;
    // for dev purposes - add a new destination for each test (can only run one test per destination id)
+
+   var date = new Date();
+   var dateStr = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
    const add_new_destination = () => {
       var randomWords = require("random-words");
@@ -57,8 +54,8 @@ function App() {
 
    const get_MFT_studies = () => {
       // console.log("Fetching MFT backlog studies...");
-      feedback.push("Fetching MFT backlog studies...");
-      return fetch(`${CORS_PROXY_URL}${API_BASE_URL}${STUDY_LIST_ENDPOINT}`)
+      feedback.push(`${dateStr}: Fetching MFT backlog studies...`);
+      return fetch(`${CORS_PROXY_URL}${API_BASE_URL}${STUDY_LIST}`)
          .then(resp => resp.json())
          .then(studies => {
             let studyArray = [];
@@ -75,7 +72,7 @@ function App() {
 
    const create_study_objects = () => {
       // console.log("Associating batch accessions with study IDs...");
-      feedback.push("Associating batch accessions with study IDs...");
+      feedback.push(`${dateStr}: Associating batch accessions with MFT studies...`);
       if (finishedFetch) {
          let studyObjectsArray = [];
          accessions.map(accession => {
@@ -90,7 +87,7 @@ function App() {
             });
          });
          setStudyObjects(studyObjectsArray);
-         feedback.push("Created study objects.");
+         feedback.push(`${dateStr}: Created study objects.`);
       }
    };
 
@@ -105,32 +102,85 @@ function App() {
    const send_studyPush_calls = async () => {
       let sentLog = [];
       let errorSendLog = [];
+      let destinationID = `ed05f760-abe5-473a-872b-538e7d7cefd5`;
       // Loop that sends studyObjects[i] and studyObjects[i+1] and increments by two, delaying the loop each time by a specified amount
       for (let i = 0; i < studyObjects.length; i += 2) {
          fetch(
-            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${studyObjects[i].uuid}&destination_id=2a1695cd-829c-4066-9432-9fbdfcb04629`
+            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${studyObjects[i].uuid}&destination_id=${destinationID}`
          )
             .then(resp => resp.json())
             .then(() => {
                sentLog.push(studyObjects[i]);
+               feedback.push([`SEND SUCCESS: ${studyObjects[i].uuid}`]);
+            })
+            .catch(() => {
+               errorSendLog.push(studyObjects[i]);
+               feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i].uuid}`]);
+               console.log(`fail for: ${studyObjects[i].accession_number} at: ${dateStr}`);
             });
          fetch(
             `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
                studyObjects[i + 1].uuid
-            }&destination_id=2a1695cd-829c-4066-9432-9fbdfcb04629`
+            }&destination_id=${destinationID}`
          )
             .then(resp => resp.json())
             .then(() => {
                sentLog.push(studyObjects[i + 1]);
+               feedback.push([`SEND SUCCESS: ${studyObjects[i + 1].uuid}`]);
             })
-            .catch(() => errorSendLog.push(studyObjects[i + 1]));
+            .catch(() => {
+               errorSendLog.push(studyObjects[i + 1]);
+               feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i + 1].uuid}`]);
+               console.log(`fail for: ${studyObjects[i + 1].accession_number} at: ${dateStr}`);
+            });
          await waitForMe(intervalValue * 60000);
       }
       console.log(sentLog);
-      setErrorSends(errorSendLog)
-      setOkSends(sentLog)
-      sentLog.length > 0 ? exportToCSV(sentLog, "These studies had valid send requests queued by script., Please check against the status report, to verify receipt of studies") : null;
-      errorSendLog.length > 0 ? exportToCSV(errorSendLog, "* * These studies had their send requests rejected * *") : null;
+      setErrorSends(errorSendLog);
+      setOkSends(sentLog);
+      sentLog.length > 0
+         ? exportToCSV(
+              sentLog,
+              "These studies had valid send requests queued by script., Please check against the status report, to verify receipt of studies"
+           )
+         : null;
+      errorSendLog.length > 0
+         ? exportToCSV(errorSendLog, "* * These studies had their send requests rejected * *")
+         : null;
+   };
+
+   const generate_status_report = () => {
+      let holding_pen = [];
+      // write a loop that goes through all the studyObjects state key and study/gets for their push statuses
+      // push a new object with the values from the currently iterated studyObject, plus a key:value pair for send status, into status_log state
+      if (studyObjects.length < 1) {
+         feedback.push(`${dateStr}: FAIL: No accessions loaded - can't create status report`);
+         alert("No study objects - cannot create report");
+      } else {
+         studyObjects.map(local_study => {
+            fetch(`${API_BASE_URL}${STUDY_GET}${local_study.uuid}`)
+               .then(resp => resp.json())
+               .then(api_study => {
+                  console.log(api_study);
+                  holding_pen.push({
+                     accession_number: local_study.accession_number,
+                     uuid: local_study.uuid,
+                     patient_name: local_study.patient_name,
+                     most_recent_push_status: api_study.study_push_status[api_study.study_push_status.length - 1].status,
+                     most_recent_push_destination_name: api_study.study_push_status[api_study.study_push_status.length - 1].destination_name,
+                     most_recent_push_status_destination_id: api_study.study_push_status[api_study.study_push_status.length - 1].destination_uuid,
+                     most_recent_push_image_count: api_study.study_push_status[api_study.study_push_status.length - 1].image_count,
+                  });
+               });
+         });
+         // exportToCSV(holding_pen, "STATUS REPORT")
+      }
+      setStatusLog(holding_pen);
+      console.log(holding_pen);
+      setFinishedFetch(true);
+      setTimeout(() => {
+         holding_pen.length > 0 ? exportToCSV(holding_pen, "STATUS REPORT") : null;
+      }, 1500);
    };
 
    const exportToCSV = (exportItems, exportTitle) => {
@@ -154,7 +204,10 @@ function App() {
       // RM296659376 RM296921275 RM295208916 RM295204737 RM297062587 RM297813397 RM297922396 RM296645480
       let splitBatch = batch.split(" ");
       // console.log("Loading the following accessions...");
-      feedback.push("Loading the following accessions...");
+      if (accessions.length > 0) {
+         feedback.push(`${dateStr}: Clearing current batch...`);
+      }
+      feedback.push(`${dateStr}: Loading the following accessions...`);
       splitBatch.map(acc => feedback.push(acc));
       console.log(splitBatch);
       setAccessions(splitBatch);
@@ -192,6 +245,11 @@ function App() {
             {batch.length > 0 ? (
                <div className='btn cyanText' onClick={() => handleLoadBatch()}>
                   {accessions.length > 0 ? "Batch loaded. Load new?" : " Load batch"}
+               </div>
+            ) : null}
+            {batch.length > 0 ? (
+               <div className='btn' onClick={() => generate_status_report()}>
+                  STATUS REPORT ON BATCH
                </div>
             ) : null}
             {accessions.length > 0 ? (

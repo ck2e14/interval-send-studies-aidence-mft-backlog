@@ -6,13 +6,23 @@
 .feedback_box_wrapper {
    /* min-height: 55vh; */
   height: fit-content;
-   z-index:999;
+  max-height: 75vh;
+   z-index:9999;
    border: 2px solid grey;
    border-radius: 10px;
-   width: 20vw;
+   min-width: 200px;
+   width: 30vw;
    overflow: auto ;
+   /* display: flex; */
+   /* flex-direction: column; */
+   line-height: 9px;
 }
 
 .feedback_box_wrapper ul {
    text-align: left;
+   overflow: auto;
+}
+
+.feedback_box_wrapper li {
+   margin-top: 5px;
 }
