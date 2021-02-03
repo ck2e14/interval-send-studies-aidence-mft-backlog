@@ -10,7 +10,7 @@ function App() {
    const [email, setEmail] = useState("C.kennedy@cimar.co.uk");
    const [finishedFetch, setFinishedFetch] = useState();
    const [backlogStudies, setBacklogStudies] = useState([]);
-   const [feedback, setFeedback] = useState([])
+   const [feedback, setFeedback] = useState([]);
    const [accessions, setAccessions] = useState([
       // "RM296659376",
       // "RM296921275",
@@ -50,7 +50,7 @@ function App() {
 
    const get_MFT_studies = () => {
       // console.log("Fetching MFT backlog studies...");
-      feedback.push("Fetching MFT backlog studies...")
+      feedback.push("Fetching MFT backlog studies...");
       return fetch(`${CORS_PROXY_URL}${API_BASE_URL}${STUDY_LIST_ENDPOINT}`)
          .then(resp => resp.json())
          .then(studies => {
@@ -68,7 +68,7 @@ function App() {
 
    const create_study_objects = () => {
       // console.log("Associating batch accessions with study IDs...");
-      feedback.push("Associating batch accessions with study IDs...")
+      feedback.push("Associating batch accessions with study IDs...");
       if (finishedFetch) {
          let studyObjectsArray = [];
          accessions.map(accession => {
@@ -83,11 +83,9 @@ function App() {
             });
          });
          setStudyObjects(studyObjectsArray);
-         setTimeout(() => {
-            // console.log("Created study objects.");
-            feedback.push("Created study objects.")
-         }, 500);
+         feedback.push("Created study objects.");
       }
+   
    };
 
    const waitForMe = async milisec => {
@@ -144,9 +142,9 @@ function App() {
    const handleLoadBatch = () => {
       // RM296659376 RM296921275 RM295208916 RM295204737 RM297062587 RM297813397 RM297922396 RM296645480
       let splitBatch = batch.split(" ");
-      console.log("Loading the following accessions...");
-      feedback.push("Loading the following accessions...")
-      splitBatch.map(acc => feedback.push(acc))
+      // console.log("Loading the following accessions...");
+      feedback.push("Loading the following accessions...");
+      splitBatch.map(acc => feedback.push(acc));
       console.log(splitBatch);
       setAccessions(splitBatch);
    };
@@ -185,21 +183,29 @@ function App() {
                   Load batch
                </div>
             ) : null}
-            <div className='btn' onClick={() => get_MFT_studies()}>
-               Stage Sends
-            </div>
-            <div className='btn'>
-               <input
-                  type='number'
-                  onChange={event => setIntervalValue(event.target.value)}
-                  placeholder='INTERVAL (ms)'
-                  className='input'
-               />
-            </div>
-            <div className='btn' onClick={() => send_studyPush_calls()}>
-               Go Full Send
-            </div>
+            {accessions.length > 0 ? (
+               <div className='btn' onClick={() => get_MFT_studies()}>
+                  Stage Sends
+               </div>
+            ) : null}
+
+            {studyObjects?.length > 0 ? (
+               <>
+                  <div className='btn'>
+                     <input
+                        type='number'
+                        onChange={event => setIntervalValue(event.target.value)}
+                        placeholder='INTERVAL (ms)'
+                        className='input'
+                     />
+                  </div>
+                  <div className='btn' onClick={() => send_studyPush_calls()}>
+                     Send pushes
+                  </div>
+               </>
+            ) : null}
          </div>
+         <img src="https://www.cimar.co.uk/wp-content/uploads/2017/07/Cimar_NoSL_colors_big.png" alt="" className="logo"/>
       </div>
    );
 }

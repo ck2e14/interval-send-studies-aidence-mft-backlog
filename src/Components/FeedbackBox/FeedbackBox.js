@@ -4,11 +4,23 @@ import "./FeedbackBox.css";
 const FeedbackBox = props => {
    const { feedback } = props;
 
+   var date = new Date();
+   var str = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+
    const renderFeedbacks = () => {
       return feedback.map(f => {
+         if(f.includes("RM")) {
+            return (
+               <>
+                  &nbsp;&nbsp;&nbsp;&nbsp;<li>{`${f}`}</li>
+                  <br />
+               </>
+            );
+         }
          return (
             <>
-               <li>{f}</li>
+               <li>{`${str} ${f}`}</li>
                <br />
             </>
          );

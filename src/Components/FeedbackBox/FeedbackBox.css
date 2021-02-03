@@ -5,7 +5,8 @@
 
 .feedback_box_wrapper {
    /* min-height: 55vh; */
-   max-height: 55vh;
+  height: fit-content;
+   z-index:999;
    border: 2px solid grey;
    border-radius: 10px;
    width: 20vw;
