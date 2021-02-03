@@ -64,6 +64,17 @@
    color: cyan !important;
 }
 
+.send_btn_wrapper {
+   display: flex;
+   flex-direction: column-reverse;
+   justify-content: center;
+   align-items: center;
+}
+
+.smaller_btn {
+/* max-width: 10%; */
+}
+
 input {
    background: rgba(0, 0, 0, 0);
    outline: none;

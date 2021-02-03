@@ -10,7 +10,7 @@ function App() {
    const [sessionID, setSessionID] = useState(null);
    const [password, setPassword] = useState("Checksum321");
    const [email, setEmail] = useState("C.kennedy@cimar.co.uk");
-   const [finishedFetch, setFinishedFetch] = useState();
+   const [finishedFetch, setFinishedFetch] = useState(true);
    const [backlogStudies, setBacklogStudies] = useState([]);
    const [feedback, setFeedback] = useState([]);
    const [accessions, setAccessions] = useState([
@@ -23,11 +23,11 @@ function App() {
       // "RM297922396",
       // "RM296645480",
    ]);
-   const [batch, setBatch] = useState(
-      "RM296659376 RM296921275 RM295208916 RM295204737 RM297062587 RM297813397 RM297922396 RM296645480"
+   const [batch, setBatch] = useState(""
+      // "RM296659376 RM296921275 RM295208916 RM295204737 RM297062587 RM297813397 RM297922396 RM296645480"
    );
    const [studyObjects, setStudyObjects] = useState([]);
-   const [destinationName, setDestinationName] = useState("0fb2c754-a6a1-43ba-8426-0244eb540cd3");
+   const [destinationName, setDestinationName] = useState("4dc7234c-7ddc-4b05-a923-c7d404cc8633");
    const [destinationID, setDestinationID] = useState("");
    const [intervalValue, setIntervalValue] = useState("");
    const [errorSends, setErrorSends] = useState([]);
@@ -35,7 +35,7 @@ function App() {
    const [statusLog, setStatusLog] = useState([]);
    const CORS_PROXY_URL = `https://sleepy-fjord-70300.herokuapp.com/`;
    const API_BASE_URL = `https://cloud.cimar.co.uk/api/v3/`;
-   const STUDY_LIST = `study/list?sid=${sessionID}&filter.phi_namespace.equals=d1776f8b-bb20-407a-b08b-1a5b7d3278b1&page.rows=999999`;
+   const STUDY_LIST = `study/list?sid=${sessionID}&filter.phi_namespace.equals=fe20dda8-d002-4a65-9e83-7395e9b655e8&page.rows=9999`;
    const STUDY_GET = `study/get?sid=${sessionID}&uuid=`;
    const DESTINATION_ADD = `destination/add?sid=${sessionID}&account_id=72ad8de3-a873-45ef-a107-d43c3f050369&node_id=1dc76b73-3810-4ffe-9c3e-b144b1fcf9a3&name=${destinationName}
    `;
@@ -55,7 +55,7 @@ function App() {
    const get_MFT_studies = () => {
       // console.log("Fetching MFT backlog studies...");
       feedback.push(`${dateStr}: Fetching MFT backlog studies...`);
-      return fetch(`${CORS_PROXY_URL}${API_BASE_URL}${STUDY_LIST}`)
+      return fetch(`${API_BASE_URL}${STUDY_LIST}`)
          .then(resp => resp.json())
          .then(studies => {
             let studyArray = [];
@@ -102,11 +102,14 @@ function App() {
    const send_studyPush_calls = async () => {
       let sentLog = [];
       let errorSendLog = [];
-      let destinationID = `ed05f760-abe5-473a-872b-538e7d7cefd5`;
+      let destinationID = `4dc7234c-7ddc-4b05-a923-c7d404cc8633`;
+      // let destinationID = `ed05f760-abe5-473a-872b-538e7d7cefd5`;
       // Loop that sends studyObjects[i] and studyObjects[i+1] and increments by two, delaying the loop each time by a specified amount
-      for (let i = 0; i < studyObjects.length; i += 2) {
+      for (let i = 0; i < studyObjects.length; i += 7) {
+         
+         // F1, index 0
          fetch(
-            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${studyObjects[i].uuid}&destination_id=${destinationID}`
+            `${CORS_PROXY_URL}${API_BASE_URL}study/push?sid=${sessionID}&uuid=${studyObjects[i].uuid}&destination_id=${destinationID}`
          )
             .then(resp => resp.json())
             .then(() => {
@@ -118,6 +121,10 @@ function App() {
                feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i].uuid}`]);
                console.log(`fail for: ${studyObjects[i].accession_number} at: ${dateStr}`);
             });
+         
+
+
+         // F2, index i + 1
          fetch(
             `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
                studyObjects[i + 1].uuid
@@ -133,6 +140,101 @@ function App() {
                feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i + 1].uuid}`]);
                console.log(`fail for: ${studyObjects[i + 1].accession_number} at: ${dateStr}`);
             });
+
+
+
+         // F3, index i + 2
+         fetch(
+            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
+               studyObjects[i + 2].uuid
+            }&destination_id=${destinationID}`
+         )
+            .then(resp => resp.json())
+            .then(() => {
+               sentLog.push(studyObjects[i + 2]);
+               feedback.push([`SEND SUCCESS: ${studyObjects[i + 2].uuid}`]);
+            })
+            .catch(() => {
+               errorSendLog.push(studyObjects[i + 2]);
+               feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i + 2].uuid}`]);
+               console.log(`fail for: ${studyObjects[i + 2].accession_number} at: ${dateStr}`);
+            });
+
+
+
+         // F4, index 3
+         fetch(
+            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
+               studyObjects[i + 3].uuid
+            }&destination_id=${destinationID}`
+         )
+            .then(resp => resp.json())
+            .then(() => {
+               sentLog.push(studyObjects[i + 3]);
+               feedback.push([`SEND SUCCESS: ${studyObjects[i + 3].uuid}`]);
+            })
+            .catch(() => {
+               errorSendLog.push(studyObjects[i + 3]);
+               feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i + 3].uuid}`]);
+               console.log(`fail for: ${studyObjects[i + 3].accession_number} at: ${dateStr}`);
+            });
+
+
+
+         // F5, index 4
+         fetch(
+            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
+               studyObjects[i + 4].uuid
+            }&destination_id=${destinationID}`
+         )
+            .then(resp => resp.json())
+            .then(() => {
+               sentLog.push(studyObjects[i + 4]);
+               feedback.push([`SEND SUCCESS: ${studyObjects[i + 3].uuid}`]);
+            })
+            .catch(() => {
+               errorSendLog.push(studyObjects[i + 4]);
+               feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i + 4].uuid}`]);
+               console.log(`fail for: ${studyObjects[i + 4].accession_number} at: ${dateStr}`);
+            });
+
+
+
+         // F6, index 5
+         fetch(
+            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
+               studyObjects[i + 5].uuid
+            }&destination_id=${destinationID}`
+         )
+            .then(resp => resp.json())
+            .then(() => {
+               sentLog.push(studyObjects[i + 5]);
+               feedback.push([`SEND SUCCESS: ${studyObjects[i + 5].uuid}`]);
+            })
+            .catch(() => {
+               errorSendLog.push(studyObjects[i + 5]);
+               feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i + 5].uuid}`]);
+               console.log(`fail for: ${studyObjects[i + 5].accession_number} at: ${dateStr}`);
+            });
+
+         // F7, index 6
+         fetch(
+            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
+               studyObjects[i + 6].uuid
+            }&destination_id=${destinationID}`
+         )
+            .then(resp => resp.json())
+            .then(() => {
+               sentLog.push(studyObjects[i + 6]);
+               feedback.push([`SEND SUCCESS: ${studyObjects[i + 6].uuid}`]);
+            })
+            .catch(() => {
+               errorSendLog.push(studyObjects[i + 6]);
+               feedback.push([`${dateStr}: SEND FAIL: ${studyObjects[i + 6].uuid}`]);
+               console.log(`fail for: ${studyObjects[i + 6].accession_number} at: ${dateStr}`);
+            });
+
+
          await waitForMe(intervalValue * 60000);
       }
       console.log(sentLog);
@@ -166,10 +268,14 @@ function App() {
                      accession_number: local_study.accession_number,
                      uuid: local_study.uuid,
                      patient_name: local_study.patient_name,
-                     most_recent_push_status: api_study.study_push_status[api_study.study_push_status.length - 1].status,
-                     most_recent_push_destination_name: api_study.study_push_status[api_study.study_push_status.length - 1].destination_name,
-                     most_recent_push_status_destination_id: api_study.study_push_status[api_study.study_push_status.length - 1].destination_uuid,
-                     most_recent_push_image_count: api_study.study_push_status[api_study.study_push_status.length - 1].image_count,
+                     most_recent_push_status:
+                        api_study.study_push_status[api_study.study_push_status.length - 1]?.status,
+                     most_recent_push_destination_name:
+                        api_study.study_push_status[api_study.study_push_status.length - 1]?.destination_name,
+                     most_recent_push_status_destination_id:
+                        api_study.study_push_status[api_study.study_push_status.length - 1]?.destination_uuid,
+                     most_recent_push_image_count:
+                        api_study.study_push_status[api_study.study_push_status.length - 1]?.image_count,
                   });
                });
          });
@@ -215,6 +321,17 @@ function App() {
 
    return (
       <div className='App'>
+         {!finishedFetch && (
+            <div className='shader-layer'>
+               {" "}
+               <div className='lds-ring'>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+               </div>
+            </div>
+         )}
          <div className='feedback_component_wrapper'>
             <FEEDBACK_BOX feedback={feedback} />
          </div>{" "}
@@ -242,25 +359,28 @@ function App() {
                   placeholder='PASTE ACCESSIONS'
                />
             </div>
+
             {batch.length > 0 ? (
-               <div className='btn cyanText' onClick={() => handleLoadBatch()}>
+               <div className='btn ' onClick={() => handleLoadBatch()}>
                   {accessions.length > 0 ? "Batch loaded. Load new?" : " Load batch"}
                </div>
             ) : null}
-            {batch.length > 0 ? (
-               <div className='btn' onClick={() => generate_status_report()}>
-                  STATUS REPORT ON BATCH
-               </div>
-            ) : null}
+
             {accessions.length > 0 ? (
                <div className='btn' onClick={() => get_MFT_studies()}>
                   Stage Sends
                </div>
             ) : null}
 
+            {studyObjects.length > 0 ? (
+               <div className='btn' onClick={() => generate_status_report()}>
+                  STATUS REPORT ON BATCH
+               </div>
+            ) : null}
+
             {studyObjects?.length > 0 ? (
-               <>
-                  <div className='btn'>
+               <div className='send_btn_wrapper'>
+                  <div className='btn smaller_btn'>
                      <input
                         type='number'
                         onChange={event => setIntervalValue(event.target.value)}
@@ -268,10 +388,13 @@ function App() {
                         className='input'
                      />
                   </div>
-                  <div className='btn' onClick={() => send_studyPush_calls()}>
-                     Send pushes
-                  </div>
-               </>
+               </div>
+            ) : null}
+
+            {intervalValue?.length > 0 ? (
+               <div className='btn cyanText' onClick={() => send_studyPush_calls()}>
+                  Send 7 pushes per the interval
+               </div>
             ) : null}
          </div>
          <img
