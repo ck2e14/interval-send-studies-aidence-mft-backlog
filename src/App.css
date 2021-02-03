@@ -44,7 +44,7 @@
    right: 10px;
    height: 100px;
 opacity: .7;
-filter: hue-rotate(130deg);
+/* filter: hue-rotate(160deg); */
 }
 
 .script {
@@ -90,4 +90,37 @@ input::placeholder {
    position: fixed;
    bottom: 20px;
    left: 20px; 
+   overflow: auto;
+}
+
+
+.lds-ring div {
+   box-sizing: border-box;
+   display: block;
+   position: absolute;
+   top: 40%;
+   width: 124px;
+   height: 124px;
+   margin: 8px;
+   border: 13px solid rgb(25, 212, 181);
+   border-radius: 50%;
+   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+   border-color: rgb(31, 31, 31) transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+   animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+   animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+   animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+   0% {
+      transform: rotate(0deg);
+   }
+   100% {
+      transform: rotate(360deg);
+   }
 }

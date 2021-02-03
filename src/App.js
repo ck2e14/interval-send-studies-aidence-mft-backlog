@@ -4,6 +4,9 @@ import FEEDBACK_BOX from "./Components/FeedbackBox/FeedbackBox";
 import { ExportToCsv } from "export-to-csv";
 import "./App.css";
 
+// TODO: Put success & error sends into feedback log
+// TODO: Make status report button and functionality, to produce CSV checking on the send status (study/get) of the sent batch
+
 function App() {
    const [sessionID, setSessionID] = useState(null);
    const [password, setPassword] = useState("Checksum321");
@@ -28,6 +31,8 @@ function App() {
    const [destinationName, setDestinationName] = useState("0fb2c754-a6a1-43ba-8426-0244eb540cd3");
    const [destinationID, setDestinationID] = useState("");
    const [intervalValue, setIntervalValue] = useState("");
+   const [errorSends, setErrorSends] = useState([]);
+   const [okSends, setOkSends] = useState([])
 
    const CORS_PROXY_URL = `https://sleepy-fjord-70300.herokuapp.com/`;
 
@@ -35,6 +40,8 @@ function App() {
 
    const STUDY_LIST_ENDPOINT = `study/list?sid=${sessionID}&filter.phi_namespace.equals=d1776f8b-bb20-407a-b08b-1a5b7d3278b1&page.rows=999999
    `;
+
+   // const 
 
    const DESTINATION_ADD_ENDPOINT = `destination/add?sid=${sessionID}&account_id=72ad8de3-a873-45ef-a107-d43c3f050369&node_id=1dc76b73-3810-4ffe-9c3e-b144b1fcf9a3&name=${destinationName}
    `;
@@ -85,7 +92,6 @@ function App() {
          setStudyObjects(studyObjectsArray);
          feedback.push("Created study objects.");
       }
-   
    };
 
    const waitForMe = async milisec => {
@@ -98,10 +104,11 @@ function App() {
 
    const send_studyPush_calls = async () => {
       let sentLog = [];
+      let errorSendLog = [];
       // Loop that sends studyObjects[i] and studyObjects[i+1] and increments by two, delaying the loop each time by a specified amount
       for (let i = 0; i < studyObjects.length; i += 2) {
          fetch(
-            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${studyObjects[i].uuid}&destination_id=49c5eaa5-d6da-4b2b-84a9-864f52e263b2`
+            `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${studyObjects[i].uuid}&destination_id=2a1695cd-829c-4066-9432-9fbdfcb04629`
          )
             .then(resp => resp.json())
             .then(() => {
@@ -110,16 +117,20 @@ function App() {
          fetch(
             `${API_BASE_URL}study/push?sid=${sessionID}&uuid=${
                studyObjects[i + 1].uuid
-            }&destination_id=49c5eaa5-d6da-4b2b-84a9-864f52e263b2`
+            }&destination_id=2a1695cd-829c-4066-9432-9fbdfcb04629`
          )
             .then(resp => resp.json())
             .then(() => {
                sentLog.push(studyObjects[i + 1]);
-            });
-         await waitForMe(intervalValue);
+            })
+            .catch(() => errorSendLog.push(studyObjects[i + 1]));
+         await waitForMe(intervalValue * 60000);
       }
       console.log(sentLog);
-      sentLog.length > 0 ? exportToCSV(sentLog, "SENT STUDIES LOG") : null;
+      setErrorSends(errorSendLog)
+      setOkSends(sentLog)
+      sentLog.length > 0 ? exportToCSV(sentLog, "These studies had valid send requests queued by script., Please check against the status report, to verify receipt of studies") : null;
+      errorSendLog.length > 0 ? exportToCSV(errorSendLog, "* * These studies had their send requests rejected * *") : null;
    };
 
    const exportToCSV = (exportItems, exportTitle) => {
@@ -180,7 +191,7 @@ function App() {
             </div>
             {batch.length > 0 ? (
                <div className='btn cyanText' onClick={() => handleLoadBatch()}>
-                  Load batch
+                  {accessions.length > 0 ? "Batch loaded. Load new?" : " Load batch"}
                </div>
             ) : null}
             {accessions.length > 0 ? (
@@ -195,7 +206,7 @@ function App() {
                      <input
                         type='number'
                         onChange={event => setIntervalValue(event.target.value)}
-                        placeholder='INTERVAL (ms)'
+                        placeholder='INTERVAL (mins)'
                         className='input'
                      />
                   </div>
@@ -205,7 +216,11 @@ function App() {
                </>
             ) : null}
          </div>
-         <img src="https://www.cimar.co.uk/wp-content/uploads/2017/07/Cimar_NoSL_colors_big.png" alt="" className="logo"/>
+         <img
+            src='https://www.cimar.co.uk/wp-content/uploads/2017/07/Cimar_NoSL_colors_big.png'
+            alt=''
+            className='logo'
+         />
       </div>
    );
 }
