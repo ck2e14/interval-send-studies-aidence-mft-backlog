@@ -1,0 +1,17 @@
+.title {
+   font-size: 2vh;
+   /* color: red; */
+}
+
+.feedback_box_wrapper {
+   /* min-height: 55vh; */
+   max-height: 55vh;
+   border: 2px solid grey;
+   border-radius: 10px;
+   width: 20vw;
+   overflow: auto ;
+}
+
+.feedback_box_wrapper ul {
+   text-align: left;
+}
