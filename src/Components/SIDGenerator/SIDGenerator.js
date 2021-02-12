@@ -26,8 +26,44 @@ const SidGen = props => {
 
    // Upon page load populate state with SID (passed down to here from fetchSessionID via App.js)
    useEffect(() => {
-      setSID(sessionID);
-   }, [sessionID]);
+      // setSID(sessionID);
+      if(sessionID && sessionID.length > 0) {
+         session_refresher()
+      }
+   }, [SID]);
+
+
+   const session_refresher = () => {
+      if(SID.length > 0) {
+         setInterval(() => {
+            setFinishedFetch(false);
+            const CORS_ANYWHERE_PREFIX = "https://sleepy-fjord-70300.herokuapp.com/";
+            const options = {
+               method: "POST",
+               body: encodeURI(`login=${email}&password=${password}&validate_session=${sessionID}`),
+               headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+               },
+            };
+            fetch(`${CORS_ANYWHERE_PREFIX}https://cloud.cimar.co.uk/api/v3/session/login`, options)
+               .then(resp => resp.json())
+               .then(data => {
+                  console.log(`refreshed: ${data.sid}`);
+                  setSessionID(data.sid);
+                  setSID(data.sid)
+                  setFinishedFetch(true);
+                  setTimeout(() => {
+                     if (data.sid) {
+                        // setRenderLoginBox(false);
+                     }
+                     if (!data.sid) {
+                        alert(`Please check your login credentials`);
+                     }
+                  }, 1500);
+               });
+         },15000);
+      }
+   }
 
    const fetchSessionID = () => {
       setFinishedFetch(false);

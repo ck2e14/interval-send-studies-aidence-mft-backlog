@@ -4,6 +4,7 @@
 }
 
 .feedback_box_wrapper {
+   z-index: 9999999999999999;
    /* min-height: 55vh; */
   height: fit-content;
   max-height: 75vh;

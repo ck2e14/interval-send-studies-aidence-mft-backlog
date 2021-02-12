@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <title></title>
+
+      <!-- 
+
+    This style tag holds the basic CSS code to ensure that the email is responsive
+    It is important to be kept in the file as it ensures the email is viewed nicely
+    on a PC and on a mobile email client
+
+  -->
+      <style type="text/css">
+         body,
+         #bodyTable {
+            height: 100% !important;
+            width: 100% !important;
+            margin: 0;
+            padding: 0;
+         }
+
+         body,
+         table,
+         td,
+         p,
+         a,
+         li,
+         blockquote {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+         }
+
+         table {
+            border-spacing: 0;
+         }
+
+         table,
+         td {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+         }
+
+         img {
+            -ms-interpolation-mode: bicubic;
+         }
+
+         img,
+         a img {
+            border: 0;
+            outline: none;
+            text-decoration: none;
+         }
+
+         div[class="wider-text"] {
+            padding-right: 20px;
+            padding-left: 20px;
+            padding-bottom: 10px;
+         }
+
+         @media screen and (max-device-width: 425px), screen and (max-width: 425px) {
+            td[class="hh-wider-text"] {
+               padding-right: 0px;
+               padding-left: 0px;
+               padding-bottom: 10px;
+            }
+
+            div[class="wider-text"] {
+               padding-right: 0px;
+               padding-left: 0px;
+               padding-bottom: 10px;
+            }
+         }
+      </style>
+   </head>
+   <body
+      leftmargin="0"
+      topmargin="0"
+      marginwidth="0"
+      marginheight="0"
+      bgcolor="#f4f4f4"
+      style="margin: 0; padding: 0; -webkit-text-size-adjust: none; -ms-text-size-adjust: none"
+   >
+      <div>
+         <table
+            align="center"
+            bgcolor="#f2f2f2"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            height="100%"
+            width="100%"
+            id="backgroundTable"
+            style="
+               background-color: rgb(242, 242, 242);
+               font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+               margin: 0px;
+               padding: 0px;
+               caret-color: rgb(0, 0, 0);
+               font-size: 12px;
+               font-style: normal;
+               font-variant-caps: normal;
+               font-weight: normal;
+               letter-spacing: normal;
+               text-align: start;
+               text-indent: 0px;
+               text-transform: none;
+               white-space: normal;
+               word-spacing: 0px;
+               -webkit-text-stroke-width: 0px;
+               text-decoration: none;
+               border-collapse: collapse !important;
+            "
+         >
+            <tbody>
+               <tr>
+                  <td
+                     align="center"
+                     valign="top"
+                     id="bodyCell"
+                     height="100%"
+                     width="100%"
+                     style="margin: 0px; padding: 0px"
+                  >
+                     <table
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        id="templateTable"
+                        bgcolor="#ffffff"
+                        style="
+                           border-collapse: collapse !important;
+                           background-color: rgb(255, 255, 255);
+                           -webkit-font-smoothing: antialiased;
+                        "
+                     >
+                        <tbody>
+                           <tr class="main-content">
+                              <td
+                                 align="center"
+                                 valign="top"
+                                 id="contentCell"
+                                 bgcolor="#f2f2f2"
+                                 style="padding: 10px 20px; background-color: rgb(242, 242, 242)"
+                              >
+                                 <table
+                                    border="0"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    id="contentTableInner"
+                                    style="
+                                       border-collapse: separate !important;
+                                       background-color: rgb(255, 255, 255);
+                                       box-shadow: rgba(0, 0, 0, 0.0980392) 0px 1px;
+                                       padding: 20px;
+                                       border-width: 1px;
+                                       border-style: solid;
+                                       border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(172, 172, 172);
+                                    "
+                                 >
+                                    <tbody>
+                                       <tr class="Header">
+                                          <td
+                                             valign="top"
+                                             colspan="12"
+                                             width="100.0%"
+                                             class="column"
+                                             align="left"
+                                             style="
+                                                color: rgb(84, 88, 90);
+                                                font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+                                                font-size: 15px;
+                                                line-height: 1.5em;
+                                                padding: 10px 0px 0px;
+                                                text-align: center;
+                                             "
+                                          >
+                                             <div
+                                                style="
+                                                   color: inherit;
+                                                   font-size: inherit;
+                                                   line-height: inherit;
+                                                "
+                                             >
+                                                <!--
+
+                                                                This is what sets the logo at the top of the email. 
+                                                                It used a brand assest call to pull in the 239x149 sized image for the vanity
+                                                                that the email was sent from. 
+                                                                You shouldn't need to change anything here
+
+                                                            -->
+
+                                                <img
+                                                   src="https://{$site}/api/v3/brand/asset?name=image_2&namespace_id={{{StorageNamespace}}}&no_error=1"
+                                                   class="hs-image-widget"
+                                                   width="239px"
+                                                   alt="{$account_name} logo"
+                                                   title="{$account_name} Medical Imaging Cloud"
+                                                   srcset="
+                                                      https://{$site}/api/v3/brand/asset?name=image_2&namespace_id={{{StorageNamespace}}}&no_error=1 365w,
+                                                      https://{$site}/api/v3/brand/asset?name=image_2&namespace_id={{{StorageNamespace}}}&no_error=1 730w
+                                                   "
+                                                   sizes="(max-width: 239px) 100vw, 239px"
+                                                   style="
+                                                      vertical-align: bottom;
+                                                      max-height: 149px;
+                                                      max-width: 239px;
+                                                      border: 0px;
+                                                   "
+                                                />
+                                             </div>
+                                             <br />
+                                             <hr style="position: relative; opacity: 0.5; width: 600px" />
+                                             <br />
+                                          </td>
+                                       </tr>
+                                       <tr class="Content">
+                                          <td
+                                             class="hh-wider-text"
+                                             valign="top"
+                                             align="left"
+                                             style="
+                                                width: 600px;
+                                                padding-left: 7.5%;
+                                                padding-right: 7.5%;
+                                                font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+                                                font-size: 15px;
+                                                line-height: 1.5em;
+                                                color: rgb(84, 88, 90);
+                                             "
+                                          >
+                                             <div class="wider-text">
+                                                <!--
+
+                                                                Below is the text for the main portion of the email. Edit below as you see fit.
+                                                                If adding a new line use a <p> tag
+                                                                If branding specifically for an account ensure to change the colour of links to an appropriate colour.
+                                                                Using find/replace is a quick and easy way to update the colours to what you want. 
+
+                                                            -->
+
+                                                <p>
+                                                   {$from} has given you viewing access to the following
+                                                   study:
+                                                </p>
+                                                <p>
+                                                   Study Date: {$study{study_date}}<br />
+                                                   Study Description: {$study{study_description}}
+                                                </p>
+                                                <p>
+                                                   <strong
+                                                      ><a
+                                                         href="{url_add_params($url, 'email', $to_email)}"
+                                                         target="_blank"
+                                                         style="
+                                                            text-decoration: none;
+                                                            color: rgb(255, 163, 0);
+                                                         "
+                                                         >Please click here to view the study</a
+                                                      ></strong
+                                                   >
+                                                </p>
+                                                <p>{$instructions}</p>
+                                                <p>
+                                                   For system support please click
+                                                   <span
+                                                      ><strong
+                                                         ><a
+                                                            href="https://cimarsupport.freshdesk.com/support/solutions/folders/47000656840"
+                                                            target="_blank"
+                                                            style="
+                                                               text-decoration: none;
+                                                               color: rgb(255, 163, 0);
+                                                            "
+                                                            >here</a
+                                                         ></strong
+                                                      ></span
+                                                   >.
+                                                </p>
+                                                <p>
+                                                   Thanks,<br />
+                                                   Cimar Support Team
+                                                </p>
+                                                <br />
+                                             </div>
+                                          </td>
+                                       </tr>
+
+                                       <!--
+                                                    The footer <tr> tag contains the marketing tag line
+                                                    Delete the entire tag to remove the tagline
+                                                -->
+
+                                       <tr class="Footer">
+                                          <td
+                                             class="hh-wider-text"
+                                             valign="top"
+                                             align="left"
+                                             style="
+                                                width: 600px;
+                                                padding-left: 7.5%;
+                                                padding-right: 7.5%;
+                                                font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+                                                font-size: 15px;
+                                                line-height: 1.5em;
+                                                color: rgb(84, 88, 90);
+                                             "
+                                          >
+                                             <div class="wider-text">
+                                                <hr style="opacity: 0.5; width:600px" />
+                                                <br />
+
+                                                <!--
+
+                                                                If you wish to onnly remoe the tagline but retain the small cimar logo delete from:
+
+                                                            -->
+
+                                                <!-- HERE -->
+
+                                                <p>
+                                                   Image management services are provided by Cimar, the UK's
+                                                   premier medical imaging cloud platform. For full info on
+                                                   our Cloud PACS and workflow solutions, please visit:<br /><br />
+                                                   W.
+                                                   <span
+                                                      ><strong
+                                                         ><a
+                                                            href="https://www.cimar.co.uk/"
+                                                            target="_blank"
+                                                            style="
+                                                               text-decoration: none;
+                                                               color: rgb(255, 163, 0);
+                                                            "
+                                                            >www.cimar.co.uk</a
+                                                         ></strong
+                                                      ></span
+                                                   ><br />
+                                                   P.
+                                                   <span
+                                                      ><strong
+                                                         ><a
+                                                            href="tel:+44 (0) 20 3904 0330"
+                                                            target="_blank"
+                                                            style="
+                                                               text-decoration: none;
+                                                               color: rgb(255, 163, 0);
+                                                            "
+                                                            >+44 (0) 20 3904 0330</a
+                                                         ></strong
+                                                      ></span
+                                                   ><br />
+                                                   E.
+                                                   <span
+                                                      ><strong
+                                                         ><a
+                                                            href="mailto:sales@cimar.co.uk"
+                                                            target="_blank"
+                                                            style="
+                                                               text-decoration: none;
+                                                               color: rgb(255, 163, 0);
+                                                            "
+                                                            >sales@cimar.co.uk</a
+                                                         ></strong
+                                                      ></span
+                                                   >.
+                                                </p>
+
+                                                <!-- TO HERE -->
+
+                                                <!-- 
+
+                                                                Below is the code for the small Cimar logo at the bottom of the email
+                                                                The image is hard coded to pull the 239x149 brand asset from the 'cloud.cimar.co.uk' vanity
+                                                           
+                                                            -->
+
+                                                <div
+                                                   style="
+                                                      color: inherit;
+                                                      font-size: inherit;
+                                                      line-height: inherit;
+                                                      align-content: center;
+                                                      display: flex;
+                                                      justify-content: center;
+                                                   "
+                                                >
+                                                   <a
+                                                      href="https://www.cimar.co.uk/"
+                                                      target="_blank"
+                                                      style="border: 0px"
+                                                   >
+                                                      <img
+                                                         src="https://cloud.cimar.co.uk/api/v3/brand/asset?name=image_2&namespace_id={{{StorageNamespace}}}&no_error=1"
+                                                         class="hs-image-widget"
+                                                         width="119.5px"
+                                                         alt="Cimar - Your Medical Imaging Cloud"
+                                                         title="Cimar - Your Medical Imaging Cloud"
+                                                         srcset="
+                                                            https://cloud.cimar.co.uk/api/v3/brand/asset?name=image_2&namespace_id={{{StorageNamespace}}}&no_error=1 365w,
+                                                            https://cloud.cimar.co.uk/api/v3/brand/asset?name=image_2&namespace_id={{{StorageNamespace}}}&no_error=1 730w
+                                                         "
+                                                         sizes="(max-width: 119.5px) 100vw, 119.5px"
+                                                         style="
+                                                            vertical-align: bottom;
+                                                            max-height: 74.5px;
+                                                            max-width: 119.5px;
+                                                            border: 0px;
+                                                         "
+                                                      />
+                                                   </a>
+                                                </div>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                           </tr>
+                           <tr class="address-footer">
+                              <td
+                                 bgcolor="#f2f2f2"
+                                 valign="top"
+                                 colspan="12"
+                                 width="100.0%"
+                                 class="column"
+                                 align="left"
+                                 style="
+                                    width: 682px;
+                                    text-align: left;
+                                    padding: 0px;
+                                    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+                                    font-size: 15px;
+                                    line-height: 1.5em;
+                                    color: rgb(84, 88, 90);
+                                 "
+                              >
+                                 <div
+                                    class="widget-span widget-type-email_can_spam"
+                                    data-widget-type="email_can_spam"
+                                 >
+                                    <!-- 
+
+                                                This is the text for Cimar's address that sits just below the white content box
+                                                If you want to remove this text or change it to the client's text you can change it here
+                                                The &nbsp; bits of text is a non-breaking space. It will force the email to have at least a single
+                                                space between each word.
+
+                                            -->
+
+                                    <p
+                                       id="footer"
+                                       align="center"
+                                       style="
+                                          margin-bottom: 1em;
+                                          font-family: Geneva, Verdana, Arial, Helvetica, sans-serif;
+                                          text-align: center;
+                                          font-size: 12px;
+                                          line-height: 1.34em;
+                                          display: block;
+                                       "
+                                    >
+                                       Cimar UK Ltd &nbsp;Kemp House &nbsp;152 - 160 City Rd &nbsp;London
+                                       &nbsp;EC1V 2PD<span class="Apple-converted-space">&nbsp;</span><br />
+                                    </p>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </body>
+</html>

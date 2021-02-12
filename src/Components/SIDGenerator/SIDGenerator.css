@@ -1,10 +1,10 @@
 .sidGenWrapper {
    position: fixed;
    height: fit-content;
-   width: 17vw;
+   width: 22vw;
    right: 2% !important;
    bottom: 2vh;
-   z-index: 998;
+   z-index: 9999999998;
    right: 0;
    display: flex;
    flex-direction: column;

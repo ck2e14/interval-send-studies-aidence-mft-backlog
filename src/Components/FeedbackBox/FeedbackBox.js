@@ -7,20 +7,19 @@ const FeedbackBox = props => {
    var date = new Date();
    var str = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
-
    const renderFeedbacks = () => {
       return feedback.map(f => {
-         if(f.includes("RM")) {
+         if (f.includes("RM")) {
             return (
                <>
-                  &nbsp;&nbsp;<div>{`${f}`}</div>
+                  <div key={f}>{`${f}`}</div>
                   <br />
                </>
             );
          }
          return (
             <>
-               <li>{`${f}`}</li>
+               <li key={f}>{`${f}`}</li>
                <br />
             </>
          );
