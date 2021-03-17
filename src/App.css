@@ -26,6 +26,7 @@
    transition: all 0.25s;
    letter-spacing: 2.5px;
    text-transform: uppercase;
+   z-index: 999999999999;
 }
 
 .btn:hover {
@@ -43,6 +44,14 @@
    height: 100px;
    opacity: 0.7;
    /* filter: hue-rotate(160deg); */
+}
+
+.uuid_search {
+   background: white !important;
+   z-index: 1000000000000000000;  
+   border: 2px solid white !important 
+
+
 }
 
 .script {
@@ -66,8 +75,20 @@
 
 .toggle_btn {
    position: fixed;
+   /* pointer-events: all ; */
    top: 15%;
    right: 5%;
+   z-index: 1000000000000000000;
+}
+
+.intro {
+   position: fixed;
+   top: 5%;
+   width: 35vw;
+   text-align: left;
+   left: 50%;
+   transform: translateX(-50%);
+
 }
 
 .send_btn_wrapper {
@@ -105,6 +126,7 @@ input::placeholder {
    width: 100vw;
    height: 100vh;
    background: rgba(0, 0, 0, 0.699);
+   /* pointer-events: all ; */
    top: 0;
    left: 0;
    position: fixed;
